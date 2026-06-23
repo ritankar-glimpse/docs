@@ -44,15 +44,15 @@
         "group": "API Reference",
         "icon": "code",
         "pages": [
-          "api-reference/introduction.mdx",
-          "api-reference/auth.mdx",
-          "api-reference/markets-topics.mdx",
-          "api-reference/trading.mdx",
-          "api-reference/portfolio.mdx",
-          "api-reference/lightning.mdx",
-          "api-reference/user-profile.mdx",
-          "api-reference/nmarket.mdx",
-          "api-reference/payments.mdx"
+          "api-reference/introduction",
+          "api-reference/auth",
+          "api-reference/markets-topics",
+          "api-reference/trading",
+          "api-reference/portfolio",
+          "api-reference/lightning",
+          "api-reference/user-profile",
+          "api-reference/nmarket",
+          "api-reference/payments"
         ]
       }
     ]
