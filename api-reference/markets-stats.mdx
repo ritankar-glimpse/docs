@@ -1,0 +1,43 @@
+---
+title: "Get market stats"
+sidebarTitle: "Market stats"
+description: "Lightweight stats for a single market by topic_id"
+---
+
+```http
+GET /api/v1/nmarket/markets/:topic_id/stats
+```
+
+Returns volume and liquidity numbers for a single market. Use this when you only need numeric stats and not full market metadata.
+
+## Path parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Numeric identifier of the market. |
+
+## Response
+
+```json
+{
+  "topic_id": 12345,
+  "volume_24h_millisats": 1500000,
+  "total_volume_millisats": 9800000,
+  "liquidity_locked_millisats": 500000
+}
+```
+
+### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Echoes the requested market id. |
+| `volume_24h_millisats` | integer | Trading volume over the last 24h, in millisats. |
+| `total_volume_millisats` | integer | Lifetime trading volume, in millisats. |
+| `liquidity_locked_millisats` | integer | Currently locked liquidity, in millisats. |
+
+## Example
+
+```bash
+curl https://api.glimpse.example.com/api/v1/nmarket/markets/12345/stats
+```

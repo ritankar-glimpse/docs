@@ -1,0 +1,79 @@
+---
+title: "List active markets in a batch (v2)"
+sidebarTitle: "Batch active markets (v2)"
+description: "Paginated active markets with structured outcomes"
+---
+
+```http
+GET /api/v1/nmarket/v2/batches/:batch_id/active-markets
+```
+
+Paginated v2 version of the batch active-markets endpoint. Returns structured outcome objects and pagination cursors.
+
+## Path parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `batch_id` | UUID | Identifier of the batch. |
+
+## Query parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `limit` | integer | Page size. Default `8`. |
+| `offset` | integer | Starting offset. Default `0`. |
+
+## Response
+
+```json
+{
+  "batch_id": "...",
+  "cumulative_volume_millisats": 28500000,
+  "cumulative_liquidity_millisats": 12000000,
+  "markets": [
+    {
+      "topic_id": 12345,
+      "volume_24h_millisats": 1500000,
+      "total_volume_millisats": 9800000,
+      "outcomes": [
+        { "option_id": 1, "name": "Yes", "shares": 1200.5 }
+      ]
+    }
+  ],
+  "count": 8,
+  "total": 24,
+  "limit": 8,
+  "offset": 0,
+  "has_more": true,
+  "next_offset": 8
+}
+```
+
+### Top-level fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batch_id` | UUID | Echoes the requested batch id. |
+| `cumulative_volume_millisats` | integer | Sum of lifetime volume across markets in the batch. |
+| `cumulative_liquidity_millisats` | integer | Sum of locked liquidity across the batch. |
+| `markets` | array | Page of market objects. |
+| `count` | integer | Number of items in this page. |
+| `total` | integer | Total active markets in the batch. |
+| `limit` | integer | Page size used. |
+| `offset` | integer | Offset used for this page. |
+| `has_more` | boolean | True if more pages are available. |
+| `next_offset` | integer \| null | Offset to request the next page. |
+
+### Outcome object
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `option_id` | integer | Outcome identifier within the market. |
+| `name` | string | Display label (e.g. `Yes`, `No`). |
+| `shares` | number | Outstanding shares for this outcome. |
+
+## Pagination example
+
+```bash
+curl "https://api.glimpse.example.com/api/v1/nmarket/v2/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/active-markets?limit=8&offset=0"
+```

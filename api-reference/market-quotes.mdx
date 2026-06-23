@@ -1,0 +1,59 @@
+---
+title: "Get market quotes"
+sidebarTitle: "Market quotes"
+description: "Full market metadata, outcomes, and quotes"
+---
+
+```http
+GET /api/v1/nmarket/markets/:topic_id/quotes
+```
+
+Returns the enriched view of a market: metadata, status, stats, and outcome quotes.
+
+## Path parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Numeric identifier of the market. |
+
+## Response
+
+```json
+{
+  "topic_id": 12345,
+  "title": "BTC above $100k?",
+  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+  "market_end_time_utc": 1740000000,
+  "is_resolved": false,
+  "quote_mode": "active",
+  "market_subsidised": true,
+  "total_amount_in_market": 500000,
+  "volume_24h_millisats": 1500000,
+  "total_volume_millisats": 9800000,
+  "liquidity_locked_millisats": 500000,
+  "outcomes": [ "..." ]
+}
+```
+
+### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `title` | string | Human-readable market question. |
+| `batch_id` | UUID | Parent batch. |
+| `market_end_time_utc` | integer | Resolution time, Unix seconds UTC. |
+| `is_resolved` | boolean | Whether the market has resolved. |
+| `quote_mode` | string | Quote engine mode (e.g. `active`). |
+| `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
+| `total_amount_in_market` | integer | Total notional in the market, in millisats. |
+| `volume_24h_millisats` | integer | 24h volume. |
+| `total_volume_millisats` | integer | Lifetime volume. |
+| `liquidity_locked_millisats` | integer | Locked liquidity. |
+| `outcomes` | array | Outcome objects with prices/shares. |
+
+## Example
+
+```bash
+curl https://api.glimpse.example.com/api/v1/nmarket/markets/12345/quotes
+```

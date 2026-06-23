@@ -1,0 +1,45 @@
+---
+title: "Get batch stats"
+sidebarTitle: "Batch stats"
+description: "Aggregate volume and liquidity for a market batch"
+---
+
+```http
+GET /api/v1/nmarket/batches/:batch_id/stats
+```
+
+Returns aggregate stats across all markets in a batch.
+
+## Path parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `batch_id` | UUID | Identifier of the batch. |
+
+## Response
+
+```json
+{
+  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+  "volume_24h_millisats": 4200000,
+  "total_volume_millisats": 28500000,
+  "liquidity_locked_millisats": 12000000,
+  "active_market_count": 8
+}
+```
+
+### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batch_id` | UUID | Echoes the requested batch id. |
+| `volume_24h_millisats` | integer | 24h volume across the batch. |
+| `total_volume_millisats` | integer | Lifetime volume across the batch. |
+| `liquidity_locked_millisats` | integer | Total locked liquidity. |
+| `active_market_count` | integer | Number of currently active markets in the batch. |
+
+## Example
+
+```bash
+curl https://api.glimpse.example.com/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/stats
+```
