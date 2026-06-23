@@ -1,0 +1,37 @@
+---
+title: "Portfolio"
+description: "Positions, P&L, bet slips, portfolio history (legacy engine)"
+---
+
+All Portfolio endpoints require **User JWT** unless noted.
+
+## Positions
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/v1/active-position-on-topic` | User JWT | Caller's open position on a specific topic. |
+| GET | `/api/v1/consolidated-active-portfolio` | User JWT | Active positions, consolidated view. |
+| GET | `/api/v1/consolidated-ended-resolved-portfolio` | User JWT | Closed \+ resolved positions. |
+| GET | `/api/v1/consolidated-ended-unresolved-portfolio` | User JWT | Closed but not-yet-resolved positions. |
+| GET | `/api/v1/consolidated-portfolio` | User JWT | Full consolidated portfolio. |
+| GET | `/api/v1/consolidated-positions` | User JWT | Raw consolidated position list. |
+| GET | `/api/v1/portfolio` | User JWT | Current portfolio snapshot. |
+
+## Bet slips
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/v1/bet-slip-by-uuid` | Public | Fetch a bet slip by its UUID. |
+| GET | `/api/v1/bet-slips` | User JWT | List caller's bet slips. |
+
+## P&L and history
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/v1/pnl-chart` | User JWT | Time-series P&L chart data. |
+| GET | `/api/v1/pnl-stats` | User JWT | Aggregate P&L stats. |
+| GET | `/api/v1/ended-trades` | User JWT | Trades that have ended. |
+| GET | `/api/v1/portfolio-history` | User JWT | Full portfolio history. |
+| GET | `/api/v1/portfolio-history-1y` | User JWT | Portfolio history over the last year. |
+| GET | `/api/v1/portfolio-history-30d` | User JWT | Portfolio history over the last 30 days. |
+| GET | `/api/v1/portfolio-history-7d` | User JWT | Portfolio history over the last 7 days. |

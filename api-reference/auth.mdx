@@ -1,0 +1,32 @@
+---
+title: "Auth"
+description: "Login, registration, OTP, password reset, TOTP, and token validation"
+---
+
+All auth routes live under `/api/v1/auth/...` on the Main Service (`localhost:9991`).
+
+## Endpoints
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| POST | `/api/v1/auth/login` | Public | Login with email/password. Returns JWT in `token`. |
+| POST | `/api/v1/auth/register` | Public | Create a new user account. |
+| POST | `/api/v1/auth/request-otp` | Public | Send a one-time password (SMS/email). |
+| POST | `/api/v1/auth/verify-otp` | Public | Verify an OTP code. |
+| POST | `/api/v1/auth/request-password-reset` | Public | Trigger password-reset email. |
+| POST | `/api/v1/auth/reset-password` | Public | Complete password reset with token. |
+| POST | `/api/v1/auth/verify-email-token` | Public | Confirm email-verification token. |
+| POST | `/api/v1/auth/verify-token` | Public | Validate an arbitrary token. |
+| POST | `/api/v1/auth/setup-totp` | User JWT | Generate TOTP secret/QR for 2FA setup. |
+| POST | `/api/v1/auth/verify-totp-setup` | User JWT | Confirm TOTP setup with a code. |
+| GET | `/api/v1/is-token-valid` | User JWT | Check if the caller's session JWT is still valid. |
+
+## Verified response
+
+`POST /api/v1/auth/login`:
+
+```json
+{ "token": "<jwt>" }
+```
+
+Use the returned `token` as the raw value of the `Authorization` header on subsequent calls — **no `Bearer ` prefix**.

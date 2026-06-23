@@ -1,0 +1,30 @@
+---
+title: "Markets & Topics"
+sidebarTitle: "Markets & Topics"
+description: "Topic listing, quotes, trends, and price estimation (legacy market engine)"
+---
+
+Legacy prediction-market endpoints. For the newer engine see [N-Market](/api-reference/nmarket).
+
+## Endpoints
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/v1/all-topics` | Public | List all prediction-market topics. |
+| GET | `/api/v1/one-topic` | Public | Fetch a single topic by ID. |
+| GET | `/api/v1/topics-by-group` | Public | Topics belonging to a given group. |
+| GET | `/api/v1/group-topics` | Public | List topic groups filtered by status. |
+| PUT | `/api/v1/group-topic/active` | Public | Toggle active status of a topic group. |
+| GET | `/api/v1/quotes` | Public | Current quotes/odds for topics. |
+| GET | `/api/v1/estimate-price` | Public | Estimate share price for a hypothetical trade. |
+| GET | `/api/v1/historical-activity` | Public | Historical trading activity for a topic. |
+| GET | `/api/v1/prediction-trend` | Public | Overall prediction trend data. |
+| GET | `/api/v1/prediction-trend-by-topic` | Public | Prediction trend scoped to one topic. |
+| GET | `/api/v1/trend` | Public | General market trend feed. |
+| GET | `/api/v1/resolved-topics-with-options` | User JWT | Resolved topics plus their correct outcome options. |
+
+## Liveness
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/` | Public | Liveness / health check for the Main Service. |

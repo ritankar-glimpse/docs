@@ -1,0 +1,42 @@
+---
+title: "Payments service"
+sidebarTitle: "Payments"
+description: "Lightning top-up, withdraw, pay-invoice, health, and the invoice-updates WebSocket"
+---
+
+Separate service running on `http://localhost:7575`. Auth is **raw JWT in `Authorization` header** (no `Bearer ` prefix), same convention as the Main Service.
+
+## REST endpoints
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/health` | Public | Liveness probe. |
+| POST | `/api/v1/topup-lightning` | User JWT | Generate a Lightning invoice to top up the wallet. Accepts `amount_in_sats` or `amount_in_millisats`. |
+| POST | `/api/v1/withdraw-lightning` | User JWT | Withdraw sats via Lightning. Accepts `amount_in_sats`. |
+| POST | `/api/v1/pay-lightning-invoice` | User JWT | Pay a BOLT11 invoice from the wallet. Accepts an `invoice` string. |
+
+### Verified responses
+
+```json title="GET /health"
+{ "status": "ok", "service": "bitgo-webhook" }
+```
+
+```json title="POST /api/v1/topup-lightning"
+{ "success": true, "invoice": "..." }
+```
+
+```json title="POST /api/v1/withdraw-lightning"
+{ "success": true, "invoice": "..." }
+```
+
+```json title="POST /api/v1/pay-lightning-invoice"
+{ "success": true, "payment": "..." }
+```
+
+## WebSocket
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET (upgrade) | `/ws/invoice-updates` | — | WebSocket upgrade for real-time invoice-status push updates. |
+
+Messages are a streaming JSON feed of invoice-status updates; payload shape is **not verified in source**. Subscribe immediately after upgrade to start receiving updates.

@@ -1,0 +1,70 @@
+---
+title: "N-Market"
+description: "Newer batch-aware market engine: markets, trades, portfolio, multi-leg bets"
+---
+
+N-Market is the newer, parallel market engine running alongside the legacy [Markets & Topics](/api-reference/markets-topics) routes. All paths are prefixed `/api/v1/nmarket/...`.
+
+## Markets & batches (Public)
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/nmarket/markets` | List markets. |
+| GET | `/api/v1/nmarket/markets/:topic_id/quotes` | Quotes for a market's topic. |
+| GET | `/api/v1/nmarket/markets/:topic_id/volume` | Trading volume by option for a topic. |
+| GET | `/api/v1/nmarket/batches` | List market batches. |
+| GET | `/api/v1/nmarket/batches/:batch_id/markets` | All markets in a batch. |
+| GET | `/api/v1/nmarket/batches/:batch_id/active-markets` | Active markets in a batch. |
+| GET | `/api/v1/nmarket/v2/batches/:batch_id/active-markets` | Active markets by batch, v2 paginated. |
+| GET | `/api/v1/nmarket/v2/batches/:batch_id/resolved-markets` | Resolved markets by batch, v2 paginated. |
+| GET | `/api/v1/nmarket/ended-by-batch` | Ended markets by batch, paginated. |
+| GET | `/api/v1/nmarket/ended-past-168h` | Markets ended in the last 168h (admin view). |
+| GET | `/api/v1/nmarket/resolved-past-168h` | Markets resolved in the last 168h. |
+
+## Trading
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| POST | `/api/v1/nmarket/trades/estimate` | Public | Estimate cost / outcome of a trade before executing. |
+| POST | `/api/v1/nmarket/trades` | User JWT \+ Eligibility | Execute a trade (n-market engine). |
+| POST | `/api/v1/nmarket/enter-multi-topic-multi-leg` | User JWT \+ Eligibility | Enter a multi-leg bet spanning multiple topics. |
+| POST | `/api/v1/nmarket/exit-multi-topic-multi-leg` | User JWT | Exit a multi-leg, multi-topic bet. |
+| POST | `/api/v1/nmarket/exit-batch` | User JWT | Exit all positions in a batch. |
+| POST | `/api/v1/nmarket/exit-consolidated` | User JWT | Exit one consolidated position. |
+| POST | `/api/v1/nmarket/exit-consolidated-multi` | User JWT | Exit multiple consolidated positions. |
+
+## Bet slips
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/v1/nmarket/bet-slip-by-uuid` | Public | Fetch bet slip by UUID. |
+| GET | `/api/v1/nmarket/bet-slips` | User JWT | List caller's bet slips. |
+
+## Portfolio & positions (User JWT)
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/nmarket/active-position-on-topic` | Active position on a topic. |
+| GET | `/api/v1/nmarket/consolidated-positions` | Raw position list. |
+| GET | `/api/v1/nmarket/consolidated-active-portfolio` | Active positions, paginated. |
+| GET | `/api/v1/nmarket/consolidated-active-portfolio-without-pagination` | Active positions, unpaginated. |
+| GET | `/api/v1/nmarket/consolidated-active-portfolio-summary` | Summary stats of active positions. |
+| GET | `/api/v1/nmarket/consolidated-ended-resolved-portfolio` | Ended \+ resolved positions. |
+| GET | `/api/v1/nmarket/consolidated-ended-unresolved-portfolio` | Ended but unresolved positions. |
+| GET | `/api/v1/nmarket/consolidated-portfolio` | Full portfolio. |
+| GET | `/api/v1/nmarket/consolidated-portfolio-summary` | Portfolio summary stats. |
+| GET | `/api/v1/nmarket/portfolio` | Portfolio snapshot. |
+| GET | `/api/v1/nmarket/portfolio-history` | Full portfolio history. |
+| GET | `/api/v1/nmarket/portfolio-history-1y` | Portfolio history, last 1y. |
+| GET | `/api/v1/nmarket/portfolio-history-30d` | Portfolio history, last 30d. |
+| GET | `/api/v1/nmarket/portfolio-history-7d` | Portfolio history, last 7d. |
+
+## Trades & performance (User JWT)
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/nmarket/ended-trades` | Caller's ended trades. |
+| GET | `/api/v1/nmarket/trades-by-topic` | Caller's trades for a topic. |
+| GET | `/api/v1/nmarket/pnl-chart` | P&L chart (n-market). |
+| GET | `/api/v1/nmarket/pnl-stats` | P&L stats (n-market). |
+| GET | `/api/v1/nmarket/trading-performance` | Caller's trading performance metrics. |

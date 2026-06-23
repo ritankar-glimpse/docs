@@ -1,0 +1,15 @@
+---
+title: "Trading"
+description: "Execute trades, buy shares, exit positions (legacy engine)"
+---
+
+Trading endpoints on the legacy market engine. For multi-leg / batch-aware trading, use [N-Market trades](/api-reference/nmarket).
+
+## Endpoints
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| POST | `/api/v1/buy-shares` | Public | Buy shares in a market outcome. |
+| POST | `/api/v1/trade` | User JWT \+ Eligibility | Execute a real trade (gated by trade-eligibility check). |
+| POST | `/api/v1/exit-consolidated` | User JWT | Exit/close a consolidated position. |
+| POST | `/api/v1/create-siumulator-market` | Public | Create a simulator/practice market. **Note:** typo (`siumulator`) is the real route name. |

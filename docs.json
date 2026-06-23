@@ -45,11 +45,14 @@
         "icon": "code",
         "pages": [
           "api-reference/introduction.mdx",
-          "api-reference/markets-stats.mdx",
-          "api-reference/batches-stats.mdx",
-          "api-reference/market-quotes.mdx",
-          "api-reference/batch-active-markets.mdx",
-          "api-reference/batch-active-markets-v2.mdx"
+          "api-reference/auth.mdx",
+          "api-reference/markets-topics.mdx",
+          "api-reference/trading.mdx",
+          "api-reference/portfolio.mdx",
+          "api-reference/lightning.mdx",
+          "api-reference/user-profile.mdx",
+          "api-reference/nmarket.mdx",
+          "api-reference/payments.mdx"
         ]
       }
     ]
