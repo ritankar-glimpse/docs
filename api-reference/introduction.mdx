@@ -1,42 +1,81 @@
 ---
-title: "Introduction"
-description: "Glimpse nmarket API endpoints for developers and LLM integration"
+title: "introduction.mdx"
+description: "Glimpse API reference — Main Service + Payments"
+url: "api-reference/introduction"
 ---
 
-The Glimpse API exposes prediction market data through a set of REST endpoints under `/api/v1/nmarket`. These docs are designed to be copied directly into LLM context windows so builders can integrate Glimpse markets into their own apps and agents.
+Glimpse exposes **two HTTP services** that builders integrate against. This reference catalogs the endpoints so you can drop the full surface into an LLM context window in one pass.
 
-## Base URL
+## Services
 
-```text
-https://api.glimpse.example.com
+| Service | Local base URL |
+| --- | --- |
+| **Main Service** | `http://localhost:9991` |
+| **Payments** | `http://localhost:7575` |
+
+Replace `localhost` with your deployed host. All paths below are prefixed `/api/v1/...` unless noted.
+
+## Authentication
+
+Both services use a **raw JWT** in the `Authorization` header — **no `Bearer ` prefix**.
+
+```http
+Authorization: <jwt>
 ```
 
-Replace with your actual production host.
+Authentication tiers used throughout this reference:
+
+- **Public** — no auth required.
+- **User JWT** — valid session token in `Authorization` header.
+- **User JWT \+ Eligibility** — JWT plus a passed internal trade-eligibility gate. Treated as User JWT from a caller's perspective; the gate is enforced server-side.
+
+Obtain a JWT via [`POST /api/v1/auth/login`](/api-reference/auth) → `{ "token": "<jwt>" }`.
 
 ## Conventions
 
-- All monetary values are returned in **millisatoshis** (`millisats`). 1 sat = 1,000 millisats.
-- Timestamps are Unix epoch seconds in UTC unless noted.
-- `topic_id` is a numeric market identifier. `batch_id` is a UUID grouping related markets.
+- Amounts use **sats** or **millisats** as named in the field. `1 sat = 1,000 millisats`.
+- Timestamps are Unix epoch seconds, UTC.
+- `topic_id` is a numeric market id. `batch_id` is a UUID grouping markets.
 
-## Endpoint categories
+## ⚠ Response shape caveat
+
+The upstream Postman collections ship with **zero saved example responses**, and the Go test suite asserts status codes only. **Only the following response shapes are verified in source:**
+
+- `POST /api/v1/auth/login` → `{ "token": "<jwt>" }`
+- `GET /health` (Payments) → `{ "status": "ok", "service": "bitgo-webhook" }`
+- `POST /api/v1/topup-lightning` → `{ "success": true, "invoice": ... }`
+- `POST /api/v1/withdraw-lightning` → `{ "success": true, "invoice": ... }`
+- `POST /api/v1/pay-lightning-invoice` → `{ "success": true, "payment": ... }`
+
+For every other endpoint, we document **method, path, auth, and purpose** derived from handler names and route groupings. Response bodies are **not invented** — hit a running instance or consult `internal/routes/*.go` and `internal/nmarket/api/routes.go` for exact shapes.
+
+## Main Service categories
 
 <CardGroup cols={2}>
-  <Card title="Stats endpoints" icon="chart-simple" href="/api-reference/markets-stats">
-    Lightweight numeric summaries for a market or batch.
+  <Card title="Auth" icon="key" href="/api-reference/auth">
   </Card>
 
-  <Card title="Enriched endpoints" icon="layer-group" href="/api-reference/market-quotes">
-    Full market metadata, outcomes, and pagination.
+  <Card title="Markets & Topics" icon="chart-line" href="/api-reference/markets-topics">
+  </Card>
+
+  <Card title="Trading" icon="arrow-right-arrow-left" href="/api-reference/trading">
+  </Card>
+
+  <Card title="Portfolio" icon="briefcase" href="/api-reference/portfolio">
+  </Card>
+
+  <Card title="Lightning" icon="bolt" href="/api-reference/lightning">
+  </Card>
+
+  <Card title="User Profile" icon="user" href="/api-reference/user-profile">
+  </Card>
+
+  <Card title="N-Market" icon="layer-group" href="/api-reference/nmarket">
   </Card>
 </CardGroup>
 
-## Endpoint index
+## Payments service
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | `/api/v1/nmarket/markets/:topic_id/stats` | Per-market volume \+ liquidity stats |
-| GET | `/api/v1/nmarket/batches/:batch_id/stats` | Per-batch volume \+ liquidity stats |
-| GET | `/api/v1/nmarket/markets/:topic_id/quotes` | Full market detail with quotes |
-| GET | `/api/v1/nmarket/batches/:batch_id/active-markets` | All active markets in a batch |
-| GET | `/api/v1/nmarket/v2/batches/:batch_id/active-markets` | v2 paginated active markets |
+<Card title="Payments endpoints" icon="bolt-lightning" href="/api-reference/payments">
+  Lightning top-up, withdraw, pay-invoice, health, and the invoice-updates WebSocket.
+</Card>
