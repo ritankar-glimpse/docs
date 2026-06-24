@@ -1,0 +1,102 @@
+---
+title: "Get batch stats"
+sidebarTitle: "GET /batches/{batch_id}/stats"
+description: "Aggregate volume, liquidity, and active-market count for a batch"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/batches/{batch_id}/stats`\
+  **Auth:** Public
+</Info>
+
+Returns aggregate stats across all markets in a batch.
+
+## Parameters
+
+### Path
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `batch_id` | string (UUID) | yes | Identifier of the batch to fetch stats for. |
+
+## Request
+
+### cURL
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/stats' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/stats
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+  "volume_24h_millisats": 76565330,
+  "total_volume_millisats": 279715931,
+  "liquidity_locked_millisats": 2266643398,
+  "active_market_count": 168
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "active_market_count": 0,
+  "batch_id": "string",
+  "liquidity_locked_millisats": 0,
+  "total_volume_millisats": 0,
+  "volume_24h_millisats": 0
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batch_id` | string (UUID) | Echoes the requested batch id. |
+| `volume_24h_millisats` | integer | 24-hour trading volume across the batch, in millisats. |
+| `total_volume_millisats` | integer | Lifetime trading volume across the batch, in millisats. |
+| `liquidity_locked_millisats` | integer | Total locked liquidity across the batch, in millisats. |
+| `active_market_count` | integer | Number of currently active markets in the batch. |
+
+### `400 Bad Request`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the `batch_id` path parameter is malformed or invalid.
+
+### `500 Internal Server Error`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

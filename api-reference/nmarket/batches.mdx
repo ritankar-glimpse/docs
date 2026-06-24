@@ -1,0 +1,126 @@
+---
+title: "List market batches"
+sidebarTitle: "GET /batches"
+description: "List all configured market batches"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/batches`\
+  **Auth:** Public
+</Info>
+
+Returns the list of currently configured market batches.
+
+## Parameters
+
+None.
+
+## Request
+
+### cURL
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/batches' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/batches
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "batches": [
+    {
+      "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+      "main_topic_title": "Hourly Bitcoin Prediction Markets",
+      "start_time_utc": 1775743200,
+      "end_time_utc": 1799492400,
+      "topic_count": 6597,
+      "outcome_min_value": 25000,
+      "outcome_max_value": 125000,
+      "outcome_interval": 200
+    },
+    {
+      "batch_id": "d139b0a0-d66f-4879-b16c-4d0ba7ed14df",
+      "main_topic_title": "10 min Long BTC markets",
+      "start_time_utc": 1775712000,
+      "end_time_utc": 1807438689,
+      "topic_count": 63,
+      "outcome_min_value": 45000,
+      "outcome_max_value": 95000,
+      "outcome_interval": 200
+    },
+    {
+      "batch_id": "f6ce8c79-7e8a-4d71-8a62-ff9b94893f9e",
+      "main_topic_title": "Starts from 4:30am utc",
+      "start_time_utc": 1775709000,
+      "end_time_utc": 1775710500,
+      "topic_count": 5,
+      "outcome_min_value": 45000,
+      "outcome_max_value": 95000,
+      "outcome_interval": 200
+    }
+  ],
+  "count": 3
+}
+```
+
+### Response headers
+
+```text
+content-length: 763
+content-type: application/json; charset=utf-8
+date: Wed, 24 Jun 2026 07:20:49 GMT
+referrer-policy: strict-origin-when-cross-origin
+server: nginx/1.18.0 (Ubuntu)
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-frame-options: DENY
+```
+
+## Responses
+
+### `200 OK`
+
+**Schema**
+
+```json
+{
+  "batches": [
+    {
+      "batch_id": "string",
+      "end_time_utc": 0,
+      "main_topic_title": "string",
+      "outcome_interval": 0,
+      "outcome_max_value": 0,
+      "outcome_min_value": 0,
+      "start_time_utc": 0,
+      "topic_count": 0
+    }
+  ],
+  "count": 0
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batches[]` | array | List of batch objects. |
+| `batches[].batch_id` | string (UUID) | Unique identifier for the batch. |
+| `batches[].main_topic_title` | string | Display title for the batch. |
+| `batches[].start_time_utc` | integer | Batch start time, Unix seconds UTC. |
+| `batches[].end_time_utc` | integer | Batch end time, Unix seconds UTC. |
+| `batches[].topic_count` | integer | Number of topics (markets) in the batch. |
+| `batches[].outcome_min_value` | integer | Lower bound of outcome value range. |
+| `batches[].outcome_max_value` | integer | Upper bound of outcome value range. |
+| `batches[].outcome_interval` | integer | Step size between adjacent outcomes. |
+| `count` | integer | Total number of batches returned. |

@@ -3,20 +3,19 @@ title: "Introduction"
 description: "Glimpse API reference — Main Service + Payments"
 ---
 
-Glimpse exposes **two HTTP services** that builders integrate against. This reference catalogs the endpoints so you can drop the full surface into an LLM context window in one pass.
+Glimpse exposes its **Main Service** over HTTP. This reference catalogs the endpoints so you can drop the full surface into an LLM context window in one pass.
 
 ## Services
 
-| Service | Local base URL |
+| Service | Base URL |
 | --- | --- |
-| **Main Service** | `http://localhost:9991` |
-| **Payments** | `http://localhost:7575` |
+| **Main Service** | `https://main.bpmapi.io` |
 
-Replace `localhost` with your deployed host. All paths below are prefixed `/api/v1/...` unless noted.
+All paths below are prefixed `/api/v1/...` unless noted.
 
 ## Authentication
 
-Both services use a **raw JWT** in the `Authorization` header — **no `Bearer ` prefix**.
+The service uses a **raw JWT** in the `Authorization` header — **no `Bearer ` prefix**.
 
 ```http
 Authorization: <jwt>
@@ -41,10 +40,6 @@ Obtain a JWT via [`POST /api/v1/auth/login`](/api-reference/auth) → `{ "token"
 The upstream Postman collections ship with **zero saved example responses**, and the Go test suite asserts status codes only. **Only the following response shapes are verified in source:**
 
 - `POST /api/v1/auth/login` → `{ "token": "<jwt>" }`
-- `GET /health` (Payments) → `{ "status": "ok", "service": "bitgo-webhook" }`
-- `POST /api/v1/topup-lightning` → `{ "success": true, "invoice": ... }`
-- `POST /api/v1/withdraw-lightning` → `{ "success": true, "invoice": ... }`
-- `POST /api/v1/pay-lightning-invoice` → `{ "success": true, "payment": ... }`
 
 For every other endpoint, we document **method, path, auth, and purpose** derived from handler names and route groupings. Response bodies are **not invented** — hit a running instance or consult `internal/routes/*.go` and `internal/nmarket/api/routes.go` for exact shapes.
 
@@ -62,19 +57,4 @@ For every other endpoint, we document **method, path, auth, and purpose** derive
 
   <Card title="Portfolio" icon="briefcase" href="/api-reference/portfolio">
   </Card>
-
-  <Card title="Lightning" icon="bolt" href="/api-reference/lightning">
-  </Card>
-
-  <Card title="User Profile" icon="user" href="/api-reference/user-profile">
-  </Card>
-
-  <Card title="N-Market" icon="layer-group" href="/api-reference/nmarket">
-  </Card>
 </CardGroup>
-
-## Payments service
-
-<Card title="Payments endpoints" icon="bolt-lightning" href="/api-reference/payments">
-  Lightning top-up, withdraw, pay-invoice, health, and the invoice-updates WebSocket.
-</Card>

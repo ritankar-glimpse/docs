@@ -1,0 +1,236 @@
+---
+title: "List all markets in a batch"
+sidebarTitle: "GET /batches/{batch_id}/markets"
+description: "All markets within a given batch (active + resolved), with outcomes"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/batches/{batch_id}/markets`\
+  **Auth:** User JWT (raw token in `Authorization` header, no `Bearer ` prefix)
+</Info>
+
+Returns every market in a batch — both active and resolved — including outcomes and resolution data.
+
+## Parameters
+
+### Path
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `batch_id` | string (UUID) | yes | Identifier of the batch to fetch markets for. |
+
+## Request
+
+### cURL
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/markets' \
+  -H 'accept: application/json' \
+  -H 'Authorization: <jwt>'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/markets
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+  "main_topic_title": "Hourly Bitcoin Prediction Markets",
+  "topic_count": 234,
+  "markets": [
+    {
+      "topic_id": 1733,
+      "title": "Hourly Bitcoin Prediction Markets",
+      "description": "Predict the Bitcoin (BTC) closing price in USD at the end of the specified UTC interval.",
+      "topic_type": "btc",
+      "category": "Bitcoin",
+      "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+      "end_time_utc": 1781704800,
+      "estimated_resolve_time": 1781704800,
+      "date_created": 1778102391,
+      "num_outcomes": 500,
+      "is_active": false,
+      "is_resolved": true,
+      "quote_mode": "resolved",
+      "resolved_option_id": 201,
+      "market_subsidised": true,
+      "subsidy_amount": 12000000,
+      "total_amount_in_market": 56062266,
+      "outcomes": [
+        {
+          "option_id": 1,
+          "name": "25000-25200",
+          "yes_price": 0,
+          "no_price": 0,
+          "yes_price_millisats": 0,
+          "no_price_millisats": 0,
+          "shares": 40,
+          "subsidised_shares": 40
+        },
+        {
+          "option_id": 2,
+          "name": "25200-25400",
+          "yes_price": 0,
+          "no_price": 0,
+          "yes_price_millisats": 0,
+          "no_price_millisats": 0,
+          "shares": 40,
+          "subsidised_shares": 40
+        }
+        // ... up to num_outcomes entries
+      ]
+    }
+    // ... additional markets (both active and resolved)
+  ]
+}
+```
+
+<Note>
+  Both `outcomes` and `markets` arrays are truncated above for readability. Unlike [active-markets](/api-reference/nmarket/active-markets), this endpoint returns resolved markets too — those will have `is_active: false`, `is_resolved: true`, `quote_mode: "resolved"`, and a `resolved_option_id`.
+</Note>
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "batch_id": "string",
+  "count": 0,
+  "cumulative_liquidity_millisats": 0,
+  "cumulative_volume_millisats": 0,
+  "end_time_utc": 0,
+  "main_topic_title": "string",
+  "markets": [
+    {
+      "batch_id": "string",
+      "category": "string",
+      "date_created": 0,
+      "description": "string",
+      "end_time_utc": 0,
+      "estimated_resolve_time": 0,
+      "is_active": true,
+      "is_resolved": true,
+      "market_subsidised": true,
+      "num_outcomes": 0,
+      "outcomes": [
+        {
+          "image_url": "string",
+          "name": "string",
+          "no_price": 0,
+          "no_price_millisats": 0,
+          "odds": 0,
+          "option_id": 0,
+          "shares": 0,
+          "subsidised_shares": 0,
+          "yes_price": 0,
+          "yes_price_millisats": 0
+        }
+      ],
+      "quote_mode": "string",
+      "resolved_option_id": 0,
+      "subsidy_amount": 0,
+      "title": "string",
+      "topic_id": 0,
+      "topic_image_url": "string",
+      "topic_type": "string",
+      "total_amount_in_market": 0,
+      "total_volume_millisats": 0,
+      "volume_24h_millisats": 0
+    }
+  ],
+  "start_time_utc": 0,
+  "topic_count": 0
+}
+```
+
+**Top-level fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batch_id` | string (UUID) | Echoes the requested batch id. |
+| `main_topic_title` | string | Display title for the batch. |
+| `topic_count` | integer | Number of topics (markets) in the batch. |
+| `count` | integer | Number of markets returned. |
+| `start_time_utc` | integer | Batch start time, Unix seconds UTC. |
+| `end_time_utc` | integer | Batch end time, Unix seconds UTC. |
+| `cumulative_volume_millisats` | integer | Sum of lifetime volume across the batch, in millisats. |
+| `cumulative_liquidity_millisats` | integer | Sum of locked liquidity across the batch, in millisats. |
+| `markets[]` | array | All markets in the batch (active \+ resolved). |
+
+**Market object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `title` | string | Market question / display title. |
+| `description` | string | Long-form description. |
+| `topic_type` | string | Topic type (e.g. `btc`). |
+| `category` | string | Display category. |
+| `topic_image_url` | string | URL of the topic image. |
+| `batch_id` | string (UUID) | Parent batch id. |
+| `end_time_utc` | integer | Market end time, Unix seconds UTC. |
+| `estimated_resolve_time` | integer | Estimated resolution time, Unix seconds UTC. |
+| `date_created` | integer | Creation timestamp, Unix seconds UTC. |
+| `num_outcomes` | integer | Total number of outcomes defined for the market. |
+| `is_active` | boolean | Whether the market is open for trading. |
+| `is_resolved` | boolean | Whether the market has resolved. |
+| `resolved_option_id` | integer | `option_id` of the winning outcome (if resolved). |
+| `quote_mode` | string | Quote engine mode (`live`, `resolved`, etc.). |
+| `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
+| `subsidy_amount` | integer | Subsidy amount, in millisats. |
+| `total_amount_in_market` | integer | Total notional in the market, in millisats. |
+| `volume_24h_millisats` | integer | 24-hour trading volume, in millisats. |
+| `total_volume_millisats` | integer | Lifetime trading volume, in millisats. |
+| `outcomes[]` | array | Outcome objects. |
+
+**Outcome object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `option_id` | integer | Outcome identifier within the market. |
+| `name` | string | Display label (e.g. price range). |
+| `image_url` | string | Optional outcome image URL. |
+| `odds` | number | Implied odds. |
+| `yes_price` | number | YES price (sats). |
+| `no_price` | number | NO price (sats). |
+| `yes_price_millisats` | integer | YES price in millisats. |
+| `no_price_millisats` | integer | NO price in millisats. |
+| `shares` | number | Outstanding shares for this outcome. |
+| `subsidised_shares` | number | Subsidised shares for this outcome. |
+
+### `400 Bad Request`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the `batch_id` path parameter is malformed or invalid.
+
+### `500 Internal Server Error`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.
