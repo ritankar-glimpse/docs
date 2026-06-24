@@ -1,24 +1,26 @@
 ---
-title: "List active markets in a batch"
-sidebarTitle: "GET /batches/{batch_id}/active-markets"
-description: "Active markets within a given batch, with outcomes and pricing"
-url: "api-reference/nmarket/active-markets"
+title: "List ended markets by batch"
+sidebarTitle: "GET /ended-by-batch"
+description: "Paginated list of ended markets in a batch"
+url: "api-reference/nmarket/ended-by-batch"
 ---
 
 <Info>
-  **Endpoint:** `GET /api/v1/nmarket/batches/{batch_id}/active-markets`\
-  **Auth:** User JWT (raw token in `Authorization` header, no `Bearer ` prefix)
+  **Endpoint:** `GET /api/v1/nmarket/ended-by-batch`\
+  **Auth:** Public
 </Info>
 
-Returns all currently active markets in a batch, including outcomes, prices, and volume.
+Returns markets in a batch that have ended (past `end_time_utc`), paginated.
 
 ## Parameters
 
-### Path
+### Query
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `batch_id` | string (UUID) | yes | Identifier of the batch to fetch active markets for. |
+| `batch_id` | string (UUID) | yes | Batch ID to fetch ended markets for. |
+| `page` | integer | no | Page number. Defaults to `1`. |
+| `page_size` | integer | no | Page size. Defaults to `10`. |
 
 ## Request
 
@@ -26,15 +28,14 @@ Returns all currently active markets in a batch, including outcomes, prices, and
 
 ```bash
 curl -X 'GET' \
-  'https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/active-markets' \
-  -H 'accept: application/json' \
-  -H 'Authorization: <jwt>'
+  'https://main.bpmapi.io/api/v1/nmarket/ended-by-batch?page=1&page_size=10&batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982' \
+  -H 'accept: application/json'
 ```
 
 ### Request URL
 
 ```text
-https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c38982/active-markets
+https://main.bpmapi.io/api/v1/nmarket/ended-by-batch?page=1&page_size=10&batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982
 ```
 
 ## Server response
@@ -43,9 +44,7 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
 
 ```json
 {
-  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
-  "main_topic_title": "Hourly Bitcoin Prediction Markets",
-  "topic_count": 168,
+  "success": true,
   "markets": [
     {
       "topic_id": 1898,
@@ -57,15 +56,15 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
       "end_time_utc": 1782298800,
       "estimated_resolve_time": 1782298800,
       "date_created": 1778104048,
+      "ended_at_utc": 1782298801,
       "num_outcomes": 500,
-      "is_active": true,
-      "is_resolved": false,
-      "quote_mode": "live",
+      "is_active": false,
+      "is_resolved": true,
+      "resolved_option_id": 187,
       "market_subsidised": true,
       "subsidy_amount": 12000000,
-      "total_amount_in_market": 21210118,
-      "volume_24h_millisats": 5488357,
-      "total_volume_millisats": 9851409,
+      "total_amount_in_market": 28092799,
+      "resolution_info": "This market resolves to the outcome bin that contains the Bitcoin (BTC) closing price in USD at the end of the market date in UTC.",
       "outcomes": [
         {
           "option_id": 1,
@@ -90,13 +89,13 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
         // ... up to num_outcomes entries
       ]
     }
-    // ... additional markets
+    // ... additional ended markets
   ]
 }
 ```
 
 <Note>
-  Outcomes and markets arrays are truncated above for readability. A single market can contain up to `num_outcomes` (e.g. 500) entries, and a batch can contain hundreds of active markets.
+  The live response includes a `success` flag and `resolution_info` / `ended_at_utc` fields on each market — these are not in the OpenAPI schema below but appear in the actual response.
 </Note>
 
 ## Responses
@@ -114,6 +113,8 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
   "cumulative_liquidity_millisats": 0,
   "cumulative_volume_millisats": 0,
   "end_time_utc": 0,
+  "has_more": true,
+  "limit": 0,
   "main_topic_title": "string",
   "markets": [
     {
@@ -129,16 +130,9 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
       "num_outcomes": 0,
       "outcomes": [
         {
-          "image_url": "string",
           "name": "string",
-          "no_price": 0,
-          "no_price_millisats": 0,
-          "odds": 0,
           "option_id": 0,
-          "shares": 0,
-          "subsidised_shares": 0,
-          "yes_price": 0,
-          "yes_price_millisats": 0
+          "shares": 0
         }
       ],
       "quote_mode": "string",
@@ -153,8 +147,11 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
       "volume_24h_millisats": 0
     }
   ],
+  "next_offset": 0,
+  "offset": 0,
   "start_time_utc": 0,
-  "topic_count": 0
+  "topic_count": 0,
+  "total": 0
 }
 ```
 
@@ -164,13 +161,18 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
 | --- | --- | --- |
 | `batch_id` | string (UUID) | Echoes the requested batch id. |
 | `main_topic_title` | string | Display title for the batch. |
-| `topic_count` | integer | Number of topics (markets) in the batch. |
-| `count` | integer | Number of active markets returned. |
+| `topic_count` | integer | Number of topics in the batch. |
+| `count` | integer | Number of ended markets in this page. |
+| `total` | integer | Total ended markets in the batch. |
+| `limit` | integer | Page size used. |
+| `offset` | integer | Offset for this page. |
+| `next_offset` | integer | Offset to request for the next page. |
+| `has_more` | boolean | True if more pages are available. |
 | `start_time_utc` | integer | Batch start time, Unix seconds UTC. |
 | `end_time_utc` | integer | Batch end time, Unix seconds UTC. |
 | `cumulative_volume_millisats` | integer | Sum of lifetime volume across the batch, in millisats. |
 | `cumulative_liquidity_millisats` | integer | Sum of locked liquidity across the batch, in millisats. |
-| `markets[]` | array | Active markets in the batch. |
+| `markets[]` | array | Ended markets for this page. |
 
 **Market object**
 
@@ -184,31 +186,54 @@ https://main.bpmapi.io/api/v1/nmarket/batches/c6dd0be7-b9b8-4a8a-b735-623660c389
 | `topic_image_url` | string | URL of the topic image. |
 | `batch_id` | string (UUID) | Parent batch id. |
 | `end_time_utc` | integer | Market end time, Unix seconds UTC. |
+| `ended_at_utc` | integer | Actual end timestamp, Unix seconds UTC. |
 | `estimated_resolve_time` | integer | Estimated resolution time, Unix seconds UTC. |
 | `date_created` | integer | Creation timestamp, Unix seconds UTC. |
 | `num_outcomes` | integer | Total number of outcomes defined for the market. |
 | `is_active` | boolean | Whether the market is open for trading. |
 | `is_resolved` | boolean | Whether the market has resolved. |
 | `resolved_option_id` | integer | `option_id` of the winning outcome (if resolved). |
-| `quote_mode` | string | Quote engine mode (e.g. `live`). |
+| `quote_mode` | string | Quote engine mode. |
 | `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
 | `subsidy_amount` | integer | Subsidy amount, in millisats. |
 | `total_amount_in_market` | integer | Total notional in the market, in millisats. |
 | `volume_24h_millisats` | integer | 24-hour trading volume, in millisats. |
 | `total_volume_millisats` | integer | Lifetime trading volume, in millisats. |
+| `resolution_info` | string | Plain-language description of the resolution rule. |
 | `outcomes[]` | array | Outcome objects. |
 
-**Outcome object**
+**Outcome object** (schema)
 
 | Field | Type | Description |
 | --- | --- | --- |
 | `option_id` | integer | Outcome identifier within the market. |
-| `name` | string | Display label (e.g. price range). |
-| `image_url` | string | Optional outcome image URL. |
-| `odds` | number | Implied odds. |
-| `yes_price` | number | YES price (sats). |
-| `no_price` | number | NO price (sats). |
-| `yes_price_millisats` | integer | YES price in millisats. |
-| `no_price_millisats` | integer | NO price in millisats. |
+| `name` | string | Display label. |
 | `shares` | number | Outstanding shares for this outcome. |
-| `subsidised_shares` | number | Subsidised shares for this outcome. |
+
+<Note>
+  The live response also includes `yes_price`, `no_price`, `yes_price_millisats`, `no_price_millisats`, and `subsidised_shares` on each outcome — these are not in the OpenAPI schema but appear in actual responses.
+</Note>
+
+### `400 Bad Request`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when `batch_id` is missing, malformed, or invalid; or when pagination params are out of range.
+
+### `500 Internal Server Error`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

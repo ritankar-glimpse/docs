@@ -56,7 +56,8 @@
               "api-reference/nmarket/batches.mdx",
               "api-reference/nmarket/active-markets.mdx",
               "api-reference/nmarket/markets.mdx",
-              "api-reference/nmarket/batch-stats.mdx"
+              "api-reference/nmarket/batch-stats.mdx",
+              "api-reference/nmarket/ended-by-batch.mdx"
             ]
           }
         ]
