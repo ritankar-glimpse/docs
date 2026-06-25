@@ -58,14 +58,14 @@
               "api-reference/nmarket/markets",
               "api-reference/nmarket/batch-stats",
               "api-reference/nmarket/ended-by-batch",
-              "api-reference/nmarket/ended-past-168h.mdx",
-              "api-reference/nmarket/markets-list.mdx",
-              "api-reference/nmarket/market-quotes.mdx",
-              "api-reference/nmarket/market-stats.mdx",
-              "api-reference/nmarket/market-volume.mdx",
-              "api-reference/nmarket/resolved-past-168h.mdx",
-              "api-reference/nmarket/active-markets-v2.mdx",
-              "api-reference/nmarket/resolved-markets-v2.mdx"
+              "api-reference/nmarket/ended-past-168h",
+              "api-reference/nmarket/markets-list",
+              "api-reference/nmarket/market-quotes",
+              "api-reference/nmarket/market-stats",
+              "api-reference/nmarket/market-volume",
+              "api-reference/nmarket/resolved-past-168h",
+              "api-reference/nmarket/active-markets-v2",
+              "api-reference/nmarket/resolved-markets-v2"
             ]
           }
         ]
