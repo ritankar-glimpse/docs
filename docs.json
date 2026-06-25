@@ -53,11 +53,11 @@
             "group": "N-Market Public",
             "icon": "globe",
             "pages": [
-              "api-reference/nmarket/batches.mdx",
-              "api-reference/nmarket/active-markets.mdx",
-              "api-reference/nmarket/markets.mdx",
-              "api-reference/nmarket/batch-stats.mdx",
-              "api-reference/nmarket/ended-by-batch.mdx"
+              "api-reference/nmarket/batches",
+              "api-reference/nmarket/active-markets",
+              "api-reference/nmarket/markets",
+              "api-reference/nmarket/batch-stats",
+              "api-reference/nmarket/ended-by-batch"
             ]
           }
         ]
