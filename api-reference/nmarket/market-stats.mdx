@@ -1,0 +1,93 @@
+---
+title: "Get market stats"
+sidebarTitle: "GET /markets/{topic_id}/stats"
+description: "Trading statistics for a single market"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/markets/{topic_id}/stats`\
+  **Auth:** Public
+</Info>
+
+Returns trading statistics for a single market.
+
+## Parameters
+
+### Path
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+
+## Request
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/markets/1944/stats' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/markets/1944/stats
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topic_id": 1944,
+  "volume_24h_millisats": 1002607,
+  "total_volume_millisats": 3188409,
+  "liquidity_locked_millisats": 14894496
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "liquidity_locked_millisats": 0,
+  "topic_id": 0,
+  "total_volume_millisats": 0,
+  "volume_24h_millisats": 0
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `volume_24h_millisats` | integer | 24-hour trading volume, in millisats. |
+| `total_volume_millisats` | integer | Lifetime trading volume, in millisats. |
+| `liquidity_locked_millisats` | integer | Liquidity locked in the market, in millisats. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when `topic_id` is missing, malformed, or does not exist.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

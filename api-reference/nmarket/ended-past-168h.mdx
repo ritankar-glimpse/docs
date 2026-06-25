@@ -1,0 +1,152 @@
+---
+title: "List ended markets in past 168h"
+sidebarTitle: "GET /ended-past-168h"
+description: "Markets in a batch that ended within the past 168 hours (7 days)"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/ended-past-168h`\
+  **Auth:** Public
+</Info>
+
+Returns ended markets for a batch within the past 168 hours (7 days).
+
+## Parameters
+
+### Query
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `batch_id` | string (UUID) | yes | Batch ID to fetch ended markets for. |
+
+## Request
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/ended-past-168h?batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/ended-past-168h?batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "success": true,
+  "markets": [
+    {
+      "topic_id": 1899,
+      "title": "Hourly Bitcoin Prediction Markets",
+      "description": "Predict the Bitcoin (BTC) closing price in USD at the end of the specified UTC interval.",
+      "topic_type": "btc",
+      "category": "Bitcoin",
+      "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+      "end_time_utc": 1782302400,
+      "estimated_resolve_time": 1782302400,
+      "date_created": 1778104058,
+      "ended_at_utc": 1782302402,
+      "num_outcomes": 500,
+      "is_active": false,
+      "is_resolved": true,
+      "resolved_option_id": 190,
+      "market_subsidised": true,
+      "subsidy_amount": 12000000,
+      "total_amount_in_market": 28882121,
+      "resolution_info": "This market resolves to the outcome bin that contains the Bitcoin (BTC) closing price in USD at the end of the market date in UTC.",
+      "outcomes": [
+        {
+          "option_id": 1,
+          "name": "25000-25200",
+          "yes_price": 0,
+          "no_price": 0,
+          "yes_price_millisats": 0,
+          "no_price_millisats": 0,
+          "shares": 40,
+          "subsidised_shares": 40
+        }
+        // ... up to num_outcomes entries
+      ]
+    }
+    // ... additional ended markets
+  ]
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+The OpenAPI schema for this endpoint is loosely typed (`additionalProp1: {}`), but the actual response is a `success` flag plus a `markets[]` array.
+
+**Top-level fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `success` | boolean | `true` on a successful response. |
+| `markets[]` | array | Markets that ended within the past 168 hours for the requested batch. |
+
+**Market object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `title` | string | Market question / display title. |
+| `description` | string | Long-form description. |
+| `topic_type` | string | Topic type (e.g. `btc`). |
+| `category` | string | Display category. |
+| `batch_id` | string (UUID) | Parent batch id. |
+| `end_time_utc` | integer | Market end time, Unix seconds UTC. |
+| `estimated_resolve_time` | integer | Estimated resolution time, Unix seconds UTC. |
+| `date_created` | integer | Creation timestamp, Unix seconds UTC. |
+| `ended_at_utc` | integer | Actual end timestamp, Unix seconds UTC. |
+| `num_outcomes` | integer | Total number of outcomes defined for the market. |
+| `is_active` | boolean | Whether the market is open for trading. |
+| `is_resolved` | boolean | Whether the market has resolved. |
+| `resolved_option_id` | integer | `option_id` of the winning outcome (if resolved). |
+| `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
+| `subsidy_amount` | integer | Subsidy amount, in millisats. |
+| `total_amount_in_market` | integer | Total notional in the market, in millisats. |
+| `resolution_info` | string | Plain-language description of the resolution rule. |
+| `outcomes[]` | array | Outcome objects. |
+
+**Outcome object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `option_id` | integer | Outcome identifier within the market. |
+| `name` | string | Display label (e.g. price bin). |
+| `yes_price` | number | YES price in sats. |
+| `no_price` | number | NO price in sats. |
+| `yes_price_millisats` | integer | YES price in millisats. |
+| `no_price_millisats` | integer | NO price in millisats. |
+| `shares` | number | Outstanding shares for this outcome. |
+| `subsidised_shares` | number | Subsidised shares contributed to this outcome. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when `batch_id` is missing or malformed.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

@@ -1,0 +1,102 @@
+---
+title: "Get market volume by option"
+sidebarTitle: "GET /markets/{topic_id}/volume"
+description: "Per-option trading volume for a market"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/markets/{topic_id}/volume`\
+  **Auth:** Public
+</Info>
+
+Returns per-option trading volume for a single market.
+
+## Parameters
+
+### Path
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+
+## Request
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/markets/1944/volume' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/markets/1944/volume
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topic_id": 1944,
+  "volume_by_option": {
+    "146": 12,
+    "147": 12,
+    "148": 12,
+    "187": 57,
+    "225": 11
+    // ... one entry per option_id
+  }
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "topic_id": 0,
+  "volume_by_option": {
+    "additionalProp1": 0,
+    "additionalProp2": 0,
+    "additionalProp3": 0
+  }
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `volume_by_option` | object | Map of `option_id` (string) → traded volume (integer). One entry per outcome in the market. |
+
+<Note>
+  Keys in `volume_by_option` are stringified `option_id` values from the market's `outcomes[]`. Units match the platform convention for traded volume on this market.
+</Note>
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when `topic_id` is missing, malformed, or does not exist.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

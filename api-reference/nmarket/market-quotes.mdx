@@ -1,0 +1,171 @@
+---
+title: "Get market quotes"
+sidebarTitle: "GET /markets/{topic_id}/quotes"
+description: "Live quotes for a market, including outcomes and pricing"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/markets/{topic_id}/quotes`\
+  **Auth:** Public
+</Info>
+
+Returns the current quote payload for a single market: metadata, aggregate stats, and per-outcome YES/NO pricing.
+
+## Parameters
+
+### Path
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+
+## Request
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/markets/1944/quotes' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/markets/1944/quotes
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topic_id": 1944,
+  "title": "Hourly Bitcoin Prediction Markets",
+  "description": "Predict the Bitcoin (BTC) closing price in USD at the end of the specified UTC interval.",
+  "topic_type": "btc",
+  "category": "Bitcoin",
+  "batch_id": "c6dd0be7-b9b8-4a8a-b735-623660c38982",
+  "market_end_time_utc": 1782464400,
+  "estimated_resolve_time": 1782464400,
+  "is_resolved": false,
+  "quote_mode": "live",
+  "market_subsidised": true,
+  "total_amount_in_market": 14894496,
+  "volume_24h_millisats": 1002607,
+  "total_volume_millisats": 3188409,
+  "liquidity_locked_millisats": 14894496,
+  "outcomes": [
+    {
+      "option_id": 1,
+      "name": "25000-25200",
+      "yes_price": 0,
+      "no_price": 103,
+      "yes_price_millisats": 0,
+      "no_price_millisats": 103000,
+      "shares": 40,
+      "subsidised_shares": 40
+    }
+    // ... up to num_outcomes entries
+  ]
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "batch_id": "string",
+  "category": "string",
+  "description": "string",
+  "estimated_resolve_time": 0,
+  "is_resolved": true,
+  "liquidity_locked_millisats": 0,
+  "market_end_time_utc": 0,
+  "market_subsidised": true,
+  "outcomes": [
+    {
+      "image_url": "string",
+      "name": "string",
+      "no_price": 0,
+      "no_price_millisats": 0,
+      "odds": 0,
+      "option_id": 0,
+      "shares": 0,
+      "subsidised_shares": 0,
+      "yes_price": 0,
+      "yes_price_millisats": 0
+    }
+  ],
+  "quote_mode": "string",
+  "title": "string",
+  "topic_id": 0,
+  "topic_image_url": "string",
+  "topic_type": "string",
+  "total_amount_in_market": 0,
+  "total_volume_millisats": 0,
+  "volume_24h_millisats": 0
+}
+```
+
+**Top-level fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `title` | string | Market question / display title. |
+| `description` | string | Long-form description. |
+| `topic_type` | string | Topic type (e.g. `btc`). |
+| `category` | string | Display category. |
+| `topic_image_url` | string | URL of the topic image. |
+| `batch_id` | string (UUID) | Parent batch id. |
+| `market_end_time_utc` | integer | Market end time, Unix seconds UTC. |
+| `estimated_resolve_time` | integer | Estimated resolution time, Unix seconds UTC. |
+| `is_resolved` | boolean | Whether the market has resolved. |
+| `quote_mode` | string | Quote engine mode (e.g. `live`, `active`). |
+| `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
+| `total_amount_in_market` | integer | Total notional in the market, in millisats. |
+| `volume_24h_millisats` | integer | 24-hour trading volume, in millisats. |
+| `total_volume_millisats` | integer | Lifetime trading volume, in millisats. |
+| `liquidity_locked_millisats` | integer | Liquidity locked in the market, in millisats. |
+| `outcomes[]` | array | Per-outcome quote objects. |
+
+**Outcome object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `option_id` | integer | Outcome identifier within the market. |
+| `name` | string | Display label (e.g. price bin). |
+| `image_url` | string | Optional outcome image URL. |
+| `yes_price` | number | YES price in sats. |
+| `no_price` | number | NO price in sats. |
+| `yes_price_millisats` | integer | YES price in millisats. |
+| `no_price_millisats` | integer | NO price in millisats. |
+| `odds` | number | Implied odds for the outcome. |
+| `shares` | number | Outstanding shares for this outcome. |
+| `subsidised_shares` | number | Subsidised shares contributed to this outcome. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when `topic_id` is missing, malformed, or does not exist.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

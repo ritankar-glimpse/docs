@@ -1,0 +1,113 @@
+---
+title: "List markets"
+sidebarTitle: "GET /markets"
+description: "Flat list of markets, optionally filtered by batch"
+---
+
+<Info>
+  **Endpoint:** `GET /api/v1/nmarket/markets`\
+  **Auth:** Public
+</Info>
+
+Returns a flat list of markets, optionally filtered by `batch_id`. Each entry is a market summary (no outcomes / pricing payload).
+
+<Note>
+  This is the flat list endpoint. For markets in a specific batch with outcomes and pricing, see [`GET /batches/{batch_id}/markets`](/api-reference/nmarket/markets).
+</Note>
+
+## Parameters
+
+### Query
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `batch_id` | string (UUID) | no | Filter results to a single batch. |
+
+## Request
+
+```bash
+curl -X 'GET' \
+  'https://main.bpmapi.io/api/v1/nmarket/markets?batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982' \
+  -H 'accept: application/json'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/markets?batch_id=c6dd0be7-b9b8-4a8a-b735-623660c38982
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "count": 191,
+  "markets": [
+    {
+      "topic_id": 223,
+      "title": "10 min Long BTC markets",
+      "topic_type": "btc",
+      "batch_id": "d139b0a0-d66f-4879-b16c-4d0ba7ed14df",
+      "end_time_utc": 1807438568,
+      "estimated_resolve_time": 1807438568,
+      "date_created": 1775902568,
+      "num_outcomes": 250,
+      "is_active": true,
+      "is_resolved": false,
+      "market_subsidised": true,
+      "subsidy_amount": 9442324,
+      "total_amount_in_market": 9442324
+    }
+    // ... up to count entries
+  ]
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+The OpenAPI schema is loosely typed (`additionalProp1: {}`); the actual shape is documented below.
+
+**Top-level fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `count` | integer | Total number of markets returned. |
+| `markets[]` | array | Market summary objects. |
+
+**Market object**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `title` | string | Market question / display title. |
+| `topic_type` | string | Topic type (e.g. `btc`). |
+| `batch_id` | string (UUID) | Parent batch id. |
+| `end_time_utc` | integer | Market end time, Unix seconds UTC. |
+| `estimated_resolve_time` | integer | Estimated resolution time, Unix seconds UTC. |
+| `date_created` | integer | Creation timestamp, Unix seconds UTC. |
+| `num_outcomes` | integer | Total number of outcomes defined for the market. |
+| `is_active` | boolean | Whether the market is open for trading. |
+| `is_resolved` | boolean | Whether the market has resolved. |
+| `market_subsidised` | boolean | Whether the market has subsidised liquidity. |
+| `subsidy_amount` | integer | Subsidy amount, in millisats. |
+| `total_amount_in_market` | integer | Total notional in the market, in millisats. |
+
+<Note>
+  This endpoint returns market summaries only — no `outcomes[]`, `description`, `category`, or pricing fields. Use the per-batch endpoints for full market detail.
+</Note>
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.
