@@ -1,0 +1,111 @@
+---
+title: "exit-consolidated"
+sidebarTitle: "POST /exit-consolidated"
+description: "Exit a consolidated position on a single topic"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/exit-consolidated`\
+  **Auth:** Required
+</Info>
+
+Exits a consolidated position on a single topic for the authenticated user.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+| `option_id` | integer | yes | Identifier of the option position to exit. |
+| `shares` | integer | yes | Number of shares to exit from the consolidated position. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/exit-consolidated' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topic_id": 1944,
+    "option_id": 101,
+    "shares": 10
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/exit-consolidated
+```
+
+### Request body
+
+```json
+{
+  "topic_id": 1944,
+  "option_id": 101,
+  "shares": 10
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the consolidated position is successfully exited.
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or contains invalid field values.
+
+### `401 Unauthorized`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request is made without valid authentication credentials.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

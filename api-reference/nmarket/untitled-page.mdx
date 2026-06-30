@@ -1,0 +1,150 @@
+---
+title: "exit-batch"
+sidebarTitle: "POST /exit-batch"
+description: "Exit all positions in a batch"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/exit-batch`\
+  **Auth:** Required
+</Info>
+
+Exits all positions in a batch for the authenticated user.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `batch_id` | string | yes | Identifier of the batch whose positions should be exited. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/exit-batch' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "batch_id": "batch_abc123"
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/exit-batch
+```
+
+### Request body
+
+```json
+{
+  "batch_id": "batch_abc123"
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "batch_id": "batch_abc123",
+  "topics_exited": 3,
+  "topics_failed": 1,
+  "total_proceeds_millisats": 29500000,
+  "total_commission_millisats": 150000,
+  "results": [
+    {
+      "topic_id": 1944,
+      "trade_id": "trade_xyz789",
+      "total_proceeds_millisats": 10000000,
+      "commission_millisats": 50000,
+      "error": ""
+    }
+  ]
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "batch_id": "string",
+  "results": [
+    {
+      "commission_millisats": 0,
+      "error": "string",
+      "topic_id": 0,
+      "total_proceeds_millisats": 0,
+      "trade_id": "string"
+    }
+  ],
+  "topics_exited": 0,
+  "topics_failed": 0,
+  "total_commission_millisats": 0,
+  "total_proceeds_millisats": 0
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `batch_id` | string | Identifier of the batch that was processed. |
+| `topics_exited` | integer | Number of topics successfully exited. |
+| `topics_failed` | integer | Number of topics that failed to exit. |
+| `total_proceeds_millisats` | integer | Total proceeds across all exited positions, in millisats. |
+| `total_commission_millisats` | integer | Total commission charged across all exits, in millisats. |
+| `results` | array | Per-topic breakdown of exit results. |
+
+#### Result object
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier for this exit result. |
+| `trade_id` | string | Unique identifier of the executed exit trade. |
+| `total_proceeds_millisats` | integer | Proceeds from this position exit, in millisats. |
+| `commission_millisats` | integer | Commission charged for this exit, in millisats. |
+| `error` | string | Error message if this topic failed to exit; empty string on success. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or `batch_id` is invalid.
+
+### `401 Unauthorized`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request is made without valid authentication credentials.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

@@ -15,46 +15,11 @@ All paths below are prefixed `/api/v1/...` unless noted.
 
 ## Authentication
 
-The service uses a **raw JWT** in the `Authorization` header — **no `Bearer ` prefix**.
+Authentication is directly through the API Keys. 
 
-```http
-Authorization: <jwt>
-```
+1. Get yourself registered on Glimpse
+2. Complete your KYC
+3. Get your API Keys on the Settings Page
+4. You can generate upto 5 API Keys\
 
-Authentication tiers used throughout this reference:
-
-- **Public** — no auth required.
-- **User JWT** — valid session token in `Authorization` header.
-- **User JWT \+ Eligibility** — JWT plus a passed internal trade-eligibility gate. Treated as User JWT from a caller's perspective; the gate is enforced server-side.
-
-Obtain a JWT via [`POST /api/v1/auth/login`](/api-reference/auth) → `{ "token": "<jwt>" }`.
-
-## Conventions
-
-- Amounts use **sats** or **millisats** as named in the field. `1 sat = 1,000 millisats`.
-- Timestamps are Unix epoch seconds, UTC.
-- `topic_id` is a numeric market id. `batch_id` is a UUID grouping markets.
-
-## ⚠ Response shape caveat
-
-The upstream Postman collections ship with **zero saved example responses**, and the Go test suite asserts status codes only. **Only the following response shapes are verified in source:**
-
-- `POST /api/v1/auth/login` → `{ "token": "<jwt>" }`
-
-For every other endpoint, we document **method, path, auth, and purpose** derived from handler names and route groupings. Response bodies are **not invented** — hit a running instance or consult `internal/routes/*.go` and `internal/nmarket/api/routes.go` for exact shapes.
-
-## Main Service categories
-
-<CardGroup cols={2}>
-  <Card title="Auth" icon="key" href="/api-reference/auth">
-  </Card>
-
-  <Card title="Markets & Topics" icon="chart-line" href="/api-reference/markets-topics">
-  </Card>
-
-  <Card title="Trading" icon="arrow-right-arrow-left" href="/api-reference/trading">
-  </Card>
-
-  <Card title="Portfolio" icon="briefcase" href="/api-reference/portfolio">
-  </Card>
-</CardGroup>
+## 

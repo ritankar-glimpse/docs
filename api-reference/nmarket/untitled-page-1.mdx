@@ -1,0 +1,139 @@
+---
+title: "estimate-trade"
+sidebarTitle: "POST /trades/estimate"
+description: "Estimate a trade without executing it"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/trades/estimate`\
+  **Auth:** Public
+</Info>
+
+Returns cost and price impact for a proposed trade without executing it.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+| `trade_type` | string | yes | Direction of the trade. Accepted values: `buy`, `sell`. |
+| `legs` | array | yes | One or more trade legs defining the contracts to estimate. |
+
+#### Leg object
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `option_id` | integer | yes | Identifier of the option being traded. |
+| `contracts` | integer | yes | Number of contracts for this leg. |
+| `prediction` | string | yes | Predicted outcome for this leg. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/trades/estimate' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topic_id": 1944,
+    "trade_type": "buy",
+    "legs": [
+      {
+        "option_id": 101,
+        "contracts": 10,
+        "prediction": "yes"
+      }
+    ]
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/trades/estimate
+```
+
+### Request body
+
+```json
+{
+  "topic_id": 1944,
+  "trade_type": "buy",
+  "legs": [
+    {
+      "option_id": 101,
+      "contracts": 10,
+      "prediction": "yes"
+    }
+  ]
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topic_id": 1944,
+  "trade_type": "buy",
+  "leg_count": 1,
+  "total_cost": 10,
+  "total_cost_millisats": 10000000,
+  "commission_millisats": 50000
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "commission_millisats": 0,
+  "leg_count": 0,
+  "topic_id": 0,
+  "total_cost": 0,
+  "total_cost_millisats": 0,
+  "trade_type": "string"
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier. |
+| `trade_type` | string | Direction of the estimated trade (`buy` or `sell`). |
+| `leg_count` | integer | Number of legs included in the estimate. |
+| `total_cost` | integer | Estimated total cost of the trade, in sats. |
+| `total_cost_millisats` | integer | Estimated total cost of the trade, in millisats. |
+| `commission_millisats` | integer | Commission charged for the trade, in millisats. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or contains invalid field values.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

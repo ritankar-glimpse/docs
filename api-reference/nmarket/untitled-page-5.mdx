@@ -1,0 +1,157 @@
+---
+title: "trades"
+sidebarTitle: "POST /trades"
+description: "Execute a buy or sell trade on a market"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/trades`\
+  **Auth:** Required
+</Info>
+
+Executes a buy or sell trade on an nmarket market. Requires authentication and trading eligibility.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+| `trade_type` | string | yes | Direction of the trade. Accepted values: `buy`, `sell`. |
+| `legs` | array | yes | One or more legs defining the contracts to trade. |
+
+#### Leg object
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `option_id` | integer | yes | Identifier of the option being traded. |
+| `contracts` | integer | yes | Number of contracts for this leg. |
+| `prediction` | string | yes | Predicted outcome for this leg. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/trades' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topic_id": 1944,
+    "trade_type": "buy",
+    "legs": [
+      {
+        "option_id": 101,
+        "contracts": 10,
+        "prediction": "yes"
+      }
+    ]
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/trades
+```
+
+### Request body
+
+```json
+{
+  "topic_id": 1944,
+  "trade_type": "buy",
+  "legs": [
+    {
+      "option_id": 101,
+      "contracts": 10,
+      "prediction": "yes"
+    }
+  ]
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topic_id": 1944,
+  "trade_id": "trade_xyz789",
+  "total_cost": 10,
+  "total_cost_millisats": 10000000,
+  "commission_millisats": 50000
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "commission_millisats": 0,
+  "topic_id": 0,
+  "total_cost": 0,
+  "total_cost_millisats": 0,
+  "trade_id": "string"
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier for this trade. |
+| `trade_id` | string | Unique identifier of the executed trade. |
+| `total_cost` | integer | Total cost of the trade, in sats. |
+| `total_cost_millisats` | integer | Total cost of the trade, in millisats. |
+| `commission_millisats` | integer | Commission charged for the trade, in millisats. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or contains invalid field values.
+
+### `401 Unauthorized`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request is made without valid authentication credentials.
+
+### `403 Forbidden`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the authenticated user does not have trading eligibility.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

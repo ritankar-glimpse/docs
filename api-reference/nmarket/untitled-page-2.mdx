@@ -1,0 +1,234 @@
+---
+title: "enter-multi-topic-multi-leg"
+sidebarTitle: "POST /enter-multi-topic-multi-leg"
+description: "Execute trades across multiple topics and legs in one request"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/enter-multi-topic-multi-leg`\
+  **Auth:** Required
+</Info>
+
+Executes trades across multiple topics and legs in a single atomic request.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topics` | array | yes | List of topics to trade, each with their own set of legs. |
+
+#### Topic object
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+| `legs` | array | yes | One or more legs to execute within this topic. |
+
+#### Leg object
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `option_id` | integer | yes | Identifier of the option being traded. |
+| `contracts` | integer | yes | Number of contracts for this leg. |
+| `prediction` | string | yes | Predicted outcome for this leg. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/enter-multi-topic-multi-leg' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topics": [
+      {
+        "topic_id": 1944,
+        "legs": [
+          {
+            "option_id": 101,
+            "contracts": 10,
+            "prediction": "yes"
+          }
+        ]
+      },
+      {
+        "topic_id": 1945,
+        "legs": [
+          {
+            "option_id": 204,
+            "contracts": 5,
+            "prediction": "no"
+          },
+          {
+            "option_id": 205,
+            "contracts": 5,
+            "prediction": "yes"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/enter-multi-topic-multi-leg
+```
+
+### Request body
+
+```json
+{
+  "topics": [
+    {
+      "topic_id": 1944,
+      "legs": [
+        {
+          "option_id": 101,
+          "contracts": 10,
+          "prediction": "yes"
+        }
+      ]
+    },
+    {
+      "topic_id": 1945,
+      "legs": [
+        {
+          "option_id": 204,
+          "contracts": 5,
+          "prediction": "no"
+        },
+        {
+          "option_id": 205,
+          "contracts": 5,
+          "prediction": "yes"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "topics_requested": 2,
+  "topics_entered": 2,
+  "topics_failed": 0,
+  "total_cost_millisats": 15000000,
+  "total_commission_millisats": 75000,
+  "results": [
+    {
+      "topic_id": 1944,
+      "trade_id": "trade_xyz789",
+      "total_cost_millisats": 10000000,
+      "commission_millisats": 50000,
+      "error": ""
+    },
+    {
+      "topic_id": 1945,
+      "trade_id": "trade_abc456",
+      "total_cost_millisats": 5000000,
+      "commission_millisats": 25000,
+      "error": ""
+    }
+  ]
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "results": [
+    {
+      "commission_millisats": 0,
+      "error": "string",
+      "topic_id": 0,
+      "total_cost_millisats": 0,
+      "trade_id": "string"
+    }
+  ],
+  "topics_entered": 0,
+  "topics_failed": 0,
+  "topics_requested": 0,
+  "total_commission_millisats": 0,
+  "total_cost_millisats": 0
+}
+```
+
+**Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topics_requested` | integer | Total number of topics submitted in the request. |
+| `topics_entered` | integer | Number of topics successfully traded. |
+| `topics_failed` | integer | Number of topics that failed to execute. |
+| `total_cost_millisats` | integer | Total cost across all entered positions, in millisats. |
+| `total_commission_millisats` | integer | Total commission charged across all trades, in millisats. |
+| `results` | array | Per-topic breakdown of trade execution results. |
+
+#### Result object
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic_id` | integer | Market identifier for this result. |
+| `trade_id` | string | Unique identifier of the executed trade. |
+| `total_cost_millisats` | integer | Cost of this trade, in millisats. |
+| `commission_millisats` | integer | Commission charged for this trade, in millisats. |
+| `error` | string | Error message if this topic failed to execute; empty string on success. |
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or contains invalid field values.
+
+### `401 Unauthorized`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request is made without valid authentication credentials.
+
+### `403 Forbidden`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the authenticated user does not have permission to execute trades.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.

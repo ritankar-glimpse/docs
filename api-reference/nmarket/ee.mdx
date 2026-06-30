@@ -1,0 +1,133 @@
+---
+title: "exit-consolidated-multi"
+sidebarTitle: "POST /exit-consolidated-multi"
+description: "Exit multiple consolidated positions in one request"
+---
+
+<Info>
+  **Endpoint:** `POST /api/v1/nmarket/exit-consolidated-multi`\
+  **Auth:** Required
+</Info>
+
+Exits multiple consolidated positions in a single request for the authenticated user.
+
+## Parameters
+
+### Body
+
+**Content type:** `application/json`
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `topic_id` | integer | yes | Market (topic) identifier. |
+| `legs` | array | yes | List of consolidated positions to exit. |
+
+#### Leg object
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `option_id` | integer | yes | Identifier of the option position to exit. |
+| `contracts` | integer | yes | Number of contracts to exit for this option. |
+
+## Request
+
+```bash
+curl -X 'POST' \
+  'https://main.bpmapi.io/api/v1/nmarket/exit-consolidated-multi' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topic_id": 1944,
+    "legs": [
+      {
+        "option_id": 101,
+        "contracts": 10
+      },
+      {
+        "option_id": 102,
+        "contracts": 5
+      }
+    ]
+  }'
+```
+
+### Request URL
+
+```text
+https://main.bpmapi.io/api/v1/nmarket/exit-consolidated-multi
+```
+
+### Request body
+
+```json
+{
+  "topic_id": 1944,
+  "legs": [
+    {
+      "option_id": 101,
+      "contracts": 10
+    },
+    {
+      "option_id": 102,
+      "contracts": 5
+    }
+  ]
+}
+```
+
+## Server response
+
+### Response body
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+## Responses
+
+### `200 OK`
+
+**Content type:** `application/json`
+
+**Schema**
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when all consolidated positions are successfully exited.
+
+### `400 Bad Request`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request body is missing, malformed, or contains invalid field values.
+
+### `401 Unauthorized`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned when the request is made without valid authentication credentials.
+
+### `500 Internal Server Error`
+
+```json
+{
+  "additionalProp1": {}
+}
+```
+
+Returned on unexpected server-side failures.
