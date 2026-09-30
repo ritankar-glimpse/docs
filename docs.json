@@ -3,7 +3,7 @@
   "theme": "mint",
   "name": "Glimpse",
   "colors": {
-    "primary": "#0A0A0E",
+    "primary": "#FFFFFF",
     "light": "#FFFFFF",
     "dark": "#0A0A0E"
   },
@@ -80,8 +80,9 @@
     ]
   },
   "logo": {
-    "light": "/logo/Glimpse_Logo_07_Horizontal_All-Dark.svg",
-    "dark": "/logo/Glimpse_Logo_07_Horizontal_All-White.svg"
+    "light": "/logo/glimpse-white.svg",
+    "dark": "/logo/glimpse-white.svg",
+    "href": "https://www.glimpse.markets"
   },
   "navbar": {
     "links": [
@@ -118,12 +119,12 @@
     }
   },
   "appearance": {
-    "default": "light",
+    "default": "dark",
     "strict": true
   },
   "background": {
     "color": {
-      "light": "#FFFFFF",
+      "light": "#0A0A0E",
       "dark": "#0A0A0E"
     }
   }
