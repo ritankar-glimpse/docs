@@ -80,8 +80,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/glimpse-white.svg",
-    "dark": "/logo/glimpse-white.svg",
+    "light": "/logo/glimpse-mark-white.png",
+    "dark": "/logo/glimpse-mark-white.png",
     "href": "https://www.glimpse.markets"
   },
   "navbar": {
