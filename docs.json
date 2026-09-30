@@ -3,11 +3,11 @@
   "theme": "mint",
   "name": "Glimpse",
   "colors": {
-    "primary": "#F37021",
-    "light": "#F58F4A",
-    "dark": "#C7561A"
+    "primary": "#0A0A0E",
+    "light": "#FFFFFF",
+    "dark": "#0A0A0E"
   },
-  "favicon": "/favicon.png",
+  "favicon": "/favicon.svg",
   "navigation": {
     "pages": [
       {
@@ -21,14 +21,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Glimpse App",
+          "icon": "chart-line",
+          "href": "https://www.glimpse.markets"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "X",
+          "icon": "x-twitter",
+          "href": "https://x.com/GlimpseMarkets"
         }
       ]
     },
@@ -80,20 +80,24 @@
     ]
   },
   "logo": {
-    "light": "/logo/glimpse.png",
-    "dark": "/logo/glimpse.png"
+    "light": "/logo/Glimpse_Logo_07_Horizontal_All-Dark.svg",
+    "dark": "/logo/Glimpse_Logo_07_Horizontal_All-White.svg"
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "https://www.glimpse.markets",
+        "label": "Website"
+      },
+      {
+        "href": "https://x.com/GlimpseMarkets",
+        "label": "X"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Launch App",
+      "href": "https://www.glimpse.markets/forecast"
     }
   },
   "contextual": {
@@ -110,9 +114,17 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/GlimpseMarkets"
+    }
+  },
+  "appearance": {
+    "default": "light",
+    "strict": true
+  },
+  "background": {
+    "color": {
+      "light": "#FFFFFF",
+      "dark": "#0A0A0E"
     }
   }
 }
